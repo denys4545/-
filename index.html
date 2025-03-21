@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Йдемо чи не йдемо?</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+        }
+        button {
+            background: #ffcc00;
+            color: black;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #e6b800;
+        }
+        .coin-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+        }
+        .coin {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            animation: none;
+        }
+        .coin .side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 50%;
+            background: #ffcc00;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: black;
+        }
+        .heads {
+            transform: rotateY(0deg);
+        }
+        .tails {
+            transform: rotateY(180deg);
+        }
+        .edge {
+            transform: rotateX(90deg);
+            background: #aaa;
+            font-size: 16px;
+        }
+        @keyframes flip {
+            0% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-200px) rotateX(1080deg); }
+            100% { transform: translateY(0) rotateX(1440deg); }
+        }
+        @keyframes edgeDrop {
+            0% { transform: translateY(-200px) rotateX(90deg); }
+            100% { transform: translateY(0) rotateX(90deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Йдемо на пару чі ні?</h1>
+        <div class="coin-container">
+            <div class="coin" id="coin">
+                <div class="side heads">На пару</div>
+                <div class="side tails">До дому</div>
+                <div class="side edge">Ребро</div>
+            </div>
+        </div>
+        <button onclick="flipCoin()">Кинути монету</button>
+        <div id="result" style="margin-top: 20px; font-size: 20px; font-weight: bold;"></div>
+    </div>
+
+    <script>
+        function flipCoin() {
+            const coin = document.getElementById('coin');
+            const result = document.getElementById('result');
+            
+            // Випадковий вибір результату
+            const random = Math.random();
+            let outcome;
+            if (random < 0.02) { // ~2% ймовірність
+                outcome = 'edge'; // Ребро
+            } else if (random < 0.51) { // 49% ймовірність
+                outcome = 'heads'; // Йдемо
+            } else {
+                outcome = 'tails'; // Не йдемо
+            }
+
+            // Анімація для кожного випадку
+            if (outcome === 'edge') {
+                coin.style.animation = 'edgeDrop 1.5s ease-in-out';
+                setTimeout(() => {
+                    coin.style.animation = 'none';
+                    coin.style.transform = 'rotateX(90deg)';
+                    result.textContent = `Результат: Ребро`;
+                }, 1500);
+            } else {
+                coin.style.animation = 'flip 1.5s ease-in-out';
+                setTimeout(() => {
+                    coin.style.animation = 'none';
+                    coin.style.transform = outcome === 'heads' 
+                        ? 'rotateY(0deg)' 
+                        : 'rotateY(180deg)';
+                    result.textContent = `Результат: ${outcome === 'heads' ? 'Йдемо' : 'Не йдемо'}`;
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
